@@ -6,6 +6,21 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <SearchView
+        android:id="@+id/searchBar"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"></SearchView>
+
+    <RelativeLayout
+        android:id="@+id/todayWeather"
+        android:layout_below="@+id/searchBar"
+        android:background="@drawable/nisght_sky"
+        android:layout_width="match_parent"
+        android:layout_height="300dp">
+
+
+
+    </RelativeLayout>
 
 
 </RelativeLayout>
