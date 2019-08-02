@@ -10,12 +10,18 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.kwabenaberko.openweathermaplib.constants.Units;
+import com.kwabenaberko.openweathermaplib.implementation.OpenWeatherMapHelper;
+import com.kwabenaberko.openweathermaplib.implementation.callbacks.ThreeHourForecastCallback;
+import com.kwabenaberko.openweathermaplib.models.threehourforecast.ThreeHourForecast;
+
 import mumayank.com.airlocationlibrary.AirLocation;
 
 public class MainActivity extends AppCompatActivity {
 
     private AirLocation airLocation;
     private double longi, lat;
+    private OpenWeatherMapHelper helper = new OpenWeatherMapHelper("edda4badb05cc4d5f46bc0152c1d13fc");
 
 
     @Override
@@ -49,8 +55,34 @@ public class MainActivity extends AppCompatActivity {
     private void locationGot()
     {
 
-        WeatherClass weather = new WeatherClass(lat,longi);
-        Toast.makeText(MainActivity.this, "Locatia este: " + longi + " " + lat + "    " + weather.getCity(), Toast.LENGTH_LONG).show();
+        helper.setUnits(Units.METRIC);
+        helper.getThreeHourForecastByGeoCoordinates(lat,longi, new ThreeHourForecastCallback() {
+            @Override
+            public void onSuccess(ThreeHourForecast weather) {
+                Log.d("DEBUGG", "City/Country: "+ weather.getCity().getName() + "/" + weather.getCity().getCountry() +"\n"
+                        +"Forecast Array Count: " + weather.getCnt() +"\n"
+                        //For this example, we are logging details of only the first forecast object in the forecasts array
+                        +"First Forecast Date Timestamp: " + weather.getList().get(0).getDt() +"\n"
+                        +"First Forecast WeatherClass Description: " + weather.getList().get(0).getWeatherArray().get(0).getDescription()+ "\n"
+                        +"First Forecast Max Temperature: " + weather.getList().get(0).getMain().getTempMax()+"\n"
+                        +"First Forecast Wind Speed: " + weather.getList().get(0).getWind().getSpeed() + "\n");
+
+                updateScreen(weather);
+
+                Toast.makeText(MainActivity.this, "Locatia este: " + longi + " " + lat + "    " + weather.getCity().getName(), Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onFailure(Throwable throwable) {
+                Log.d("DEBUGG", throwable.getMessage());
+            }
+        });
+
+
+    }
+
+    private void updateScreen(ThreeHourForecast weather)
+    {
 
     }
 
