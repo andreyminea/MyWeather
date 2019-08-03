@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FFF"
     tools:context=".MainActivity">
 
     <SearchView
@@ -18,9 +19,44 @@
         android:layout_width="match_parent"
         android:layout_height="300dp">
 
+        <ImageView
+            android:id="@+id/weatherArt"
+            android:layout_centerInParent="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/cloud"/>
 
+        <TextView
+            android:id="@+id/cityCondition"
+            android:layout_above="@+id/weatherArt"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Cloudy"
+            android:textSize="25sp"
+            android:textColor="#FFF"/>
 
+        <TextView
+            android:id="@+id/cityShow"
+            android:layout_below="@+id/weatherArt"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Bucuresti"
+            android:textSize="20sp"
+            android:textColor="#FFF"/>
+
+        <TextView
+            android:id="@+id/cityTemp"
+            android:layout_below="@+id/cityShow"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="30 C"
+            android:textSize="18sp"
+            android:textColor="#FFF"/>
     </RelativeLayout>
+    
 
 
 </RelativeLayout>
