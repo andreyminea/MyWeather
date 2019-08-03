@@ -15,7 +15,10 @@ import com.kwabenaberko.openweathermaplib.implementation.OpenWeatherMapHelper;
 import com.kwabenaberko.openweathermaplib.implementation.callbacks.ThreeHourForecastCallback;
 import com.kwabenaberko.openweathermaplib.models.threehourforecast.ThreeHourForecast;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 import mumayank.com.airlocationlibrary.AirLocation;
 
@@ -67,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("DEBUGG", "City/Country: "+ weather.getCity().getName() + "/" + weather.getCity().getCountry() +"\n"
                         +"Forecast Array Count: " + weather.getCnt() +"\n"
                         //For this example, we are logging details of only the first forecast object in the forecasts array
-                        +"First Forecast Date Timestamp: " + weather.getList().get(0).getDt() +"\n"
+                        +"First Forecast Date Timestamp: " + weather.getList().get(0).getDtTxt() +"\n"
                         +"First Forecast WeatherClass Description: " + weather.getList().get(0).getWeatherArray().get(0).getDescription()+ "\n"
                         +"First Forecast Max Temperature: " + weather.getList().get(0).getMain().getTempMax()+"\n"
                         +"First Forecast Wind Speed: " + weather.getList().get(0).getWind().getSpeed() + "\n");
@@ -88,12 +91,21 @@ public class MainActivity extends AppCompatActivity {
 
     private void updateScreen(ThreeHourForecast weather)
     {
+
+        Date currentTime = Calendar.getInstance().getTime();
+        SimpleDateFormat dataFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Log.d("DEBUGG", dataFormat.format(currentTime));
+        String today = dataFormat.format(currentTime);
+
         int n = weather.getList().size();
         String display="\n"+ weather.getList().size()+"\n";
         Log.d("DEBUGG", "\n");
         for(int i=0; i<n; i++)
         {
-            display = display + weather.getList().get(0).getMain().getTemp()+"\n";
+           if(weather.getList().get(i).getDtTxt().contains(today))
+            display = display + weather.getList().get(i).getDtTxt()+"\n";
+            //weather.getList().get(0).getMain().getTemp()
+
         }
 
         Log.d("DEBUGG", display);
