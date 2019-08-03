@@ -15,6 +15,8 @@ import com.kwabenaberko.openweathermaplib.implementation.OpenWeatherMapHelper;
 import com.kwabenaberko.openweathermaplib.implementation.callbacks.ThreeHourForecastCallback;
 import com.kwabenaberko.openweathermaplib.models.threehourforecast.ThreeHourForecast;
 
+import java.util.ArrayList;
+
 import mumayank.com.airlocationlibrary.AirLocation;
 
 public class MainActivity extends AppCompatActivity {
@@ -22,6 +24,9 @@ public class MainActivity extends AppCompatActivity {
     private AirLocation airLocation;
     private double longi, lat;
     private OpenWeatherMapHelper helper = new OpenWeatherMapHelper("edda4badb05cc4d5f46bc0152c1d13fc");
+    private ArrayList<String> days = new ArrayList<>();
+    private ArrayList<Integer> imgs = new ArrayList<>();
+    private ArrayList<String> temps = new ArrayList<>();
 
 
     @Override
@@ -83,6 +88,16 @@ public class MainActivity extends AppCompatActivity {
 
     private void updateScreen(ThreeHourForecast weather)
     {
+        int n = weather.getList().size();
+        String display="\n"+ weather.getList().size()+"\n";
+        Log.d("DEBUGG", "\n");
+        for(int i=0; i<n; i++)
+        {
+            display = display + weather.getList().get(0).getMain().getTemp()+"\n";
+        }
+
+        Log.d("DEBUGG", display);
+
 
     }
 
