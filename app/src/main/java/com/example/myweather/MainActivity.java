@@ -3,22 +3,17 @@ package com.example.myweather;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.kwabenaberko.openweathermaplib.constants.Units;
-import com.kwabenaberko.openweathermaplib.implementation.OpenWeatherMapHelper;
-import com.kwabenaberko.openweathermaplib.implementation.callbacks.ThreeHourForecastCallback;
 import com.kwabenaberko.openweathermaplib.models.threehourforecast.ThreeHourForecast;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 
 import mumayank.com.airlocationlibrary.AirLocation;
 
@@ -26,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
 
     private AirLocation airLocation;
     private double longi, lat;
-    private OpenWeatherMapHelper helper = new OpenWeatherMapHelper("edda4badb05cc4d5f46bc0152c1d13fc");
+    RecyclerView perday;
     private ArrayList<String> days = new ArrayList<>();
     private ArrayList<Integer> imgs = new ArrayList<>();
     private ArrayList<String> temps = new ArrayList<>();
@@ -36,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        perday = findViewById(R.id.prognosysDays);
 
         // Fetch location simply like this whenever you need
         airLocation = new AirLocation(this, true, true, new AirLocation.Callbacks() {
@@ -62,53 +59,20 @@ public class MainActivity extends AppCompatActivity {
 
     private void locationGot()
     {
+        WeatherFiveDays mWeather = new WeatherFiveDays(lat,longi);
 
-        helper.setUnits(Units.METRIC);
-        helper.getThreeHourForecastByGeoCoordinates(lat,longi, new ThreeHourForecastCallback() {
-            @Override
-            public void onSuccess(ThreeHourForecast weather) {
-                Log.d("DEBUGG", "City/Country: "+ weather.getCity().getName() + "/" + weather.getCity().getCountry() +"\n"
-                        +"Forecast Array Count: " + weather.getCnt() +"\n"
-                        //For this example, we are logging details of only the first forecast object in the forecasts array
-                        +"First Forecast Date Timestamp: " + weather.getList().get(0).getDtTxt() +"\n"
-                        +"First Forecast WeatherClass Description: " + weather.getList().get(0).getWeatherArray().get(0).getDescription()+ "\n"
-                        +"First Forecast Max Temperature: " + weather.getList().get(0).getMain().getTempMax()+"\n"
-                        +"First Forecast Wind Speed: " + weather.getList().get(0).getWind().getSpeed() + "\n");
+        days = mWeather.getDays();
+        imgs = mWeather.getImgs();
+        temps = mWeather.getTemps();
 
-                updateScreen(weather);
-
-                Toast.makeText(MainActivity.this, "Locatia este: " + longi + " " + lat + "    " + weather.getCity().getName(), Toast.LENGTH_LONG).show();
-            }
-
-            @Override
-            public void onFailure(Throwable throwable) {
-                Log.d("DEBUGG", throwable.getMessage());
-            }
-        });
-
+        Log.d("DEBUGG", "Location Done ....updating screen");
+        updateScreen();
 
     }
 
-    private void updateScreen(ThreeHourForecast weather)
+    private void updateScreen()
     {
-
-        Date currentTime = Calendar.getInstance().getTime();
-        SimpleDateFormat dataFormat = new SimpleDateFormat("yyyy-MM-dd");
-        Log.d("DEBUGG", dataFormat.format(currentTime));
-        String today = dataFormat.format(currentTime);
-
-        int n = weather.getList().size();
-        String display="\n"+ weather.getList().size()+"\n";
-        Log.d("DEBUGG", "\n");
-        for(int i=0; i<n; i++)
-        {
-           if(weather.getList().get(i).getDtTxt().contains(today))
-            display = display + weather.getList().get(i).getDtTxt()+"\n";
-            //weather.getList().get(0).getMain().getTemp()
-
-        }
-
-        Log.d("DEBUGG", display);
+        initRecycleView();
 
 
     }
@@ -128,6 +92,16 @@ public class MainActivity extends AppCompatActivity {
         airLocation.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
     }
+
+    void initRecycleView()
+    {
+        Log.d("DEBUGG", "RecycleView is set");
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL,false);
+        perday.setLayoutManager(layoutManager);
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter(days, imgs, temps, this);
+        perday.setAdapter(adapter);
+    }
+
 
 
 }
