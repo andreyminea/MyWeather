@@ -17,7 +17,7 @@ import java.util.ArrayList;
 
 import mumayank.com.airlocationlibrary.AirLocation;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ICallBack {
 
     private AirLocation airLocation;
     private double longi, lat;
@@ -25,6 +25,8 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<String> days = new ArrayList<>();
     private ArrayList<Integer> imgs = new ArrayList<>();
     private ArrayList<String> temps = new ArrayList<>();
+    LinearLayoutManager layoutManager;
+    RecyclerViewAdapter adapter;
 
 
     @Override
@@ -33,6 +35,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         perday = findViewById(R.id.prognosysDays);
+        layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL,false);
+        perday.setLayoutManager(layoutManager);
+        adapter = new RecyclerViewAdapter(days, imgs, temps, this);
+        perday.setAdapter(adapter);
 
         // Fetch location simply like this whenever you need
         airLocation = new AirLocation(this, true, true, new AirLocation.Callbacks() {
@@ -59,14 +65,18 @@ public class MainActivity extends AppCompatActivity {
 
     private void locationGot()
     {
-        WeatherFiveDays mWeather = new WeatherFiveDays(lat,longi);
+        WeatherFiveDays mWeather = new WeatherFiveDays(lat,longi, this);
+
+
 
         days = mWeather.getDays();
         imgs = mWeather.getImgs();
         temps = mWeather.getTemps();
 
+        Log.d("DEBUGG", "List size: " + mWeather.getDays().size());
+
         Log.d("DEBUGG", "Location Done ....updating screen");
-        updateScreen();
+
 
     }
 
@@ -96,12 +106,22 @@ public class MainActivity extends AppCompatActivity {
     void initRecycleView()
     {
         Log.d("DEBUGG", "RecycleView is set");
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL,false);
-        perday.setLayoutManager(layoutManager);
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(days, imgs, temps, this);
+
+        adapter = new RecyclerViewAdapter(days, imgs, temps, this);
         perday.setAdapter(adapter);
+
+        Log.d("DEBUGG", "RecycleView size: " + adapter.getItemCount());
+
     }
 
 
+    @Override
+    public void callback(ArrayList<String> callTemps, ArrayList<String> callDays, ArrayList<Integer> callImgs)
+    {
+        days = callDays;
+        temps = callTemps;
+        imgs = callImgs;
+        updateScreen();
 
+    }
 }

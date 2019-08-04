@@ -1,6 +1,7 @@
 package com.example.myweather;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,7 +32,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate((R.layout.future_days), parent, false);
+        View view = LayoutInflater.from(context).inflate((R.layout.future_days), parent, false);
 
         return new ViewHolder(view);
     }
@@ -40,6 +41,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         holder.day.setText((days.get(position)));
         holder.image.setImageResource(imgs.get(position));
+        Log.d("DEBUGG",""+imgs.get(position));
         holder.temp.setText(temps.get(position));
 
         holder.image.setOnClickListener(new View.OnClickListener() {
@@ -52,7 +54,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public int getItemCount() {
-        return 0;
+        return imgs.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder

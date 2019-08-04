@@ -19,6 +19,8 @@ import java.util.Map;
 
 public class WeatherFiveDays
 {
+    ICallBack iCallBack;
+
     private OpenWeatherMapHelper helper = new OpenWeatherMapHelper("edda4badb05cc4d5f46bc0152c1d13fc");
     private double longi, lat;
     private String city;
@@ -26,8 +28,9 @@ public class WeatherFiveDays
     private ArrayList<Integer> imgs = new ArrayList<>();
     private ArrayList<String> temps = new ArrayList<>();
 
-    public WeatherFiveDays(double latitude, double longitude)
+    public WeatherFiveDays(double latitude, double longitude, ICallBack ic)
     {
+        iCallBack=ic;
         longi=longitude;
         lat=latitude;
         helper.setUnits(Units.METRIC);
@@ -36,7 +39,13 @@ public class WeatherFiveDays
             public void onSuccess(ThreeHourForecast weather) {
                 Log.d("DEBUGG", "City/Country: " + weather.getCity().getName() + "/" + weather.getCity().getCountry() + "\n \n");
 
-                setArrays(weather);
+                temps = getAverageTemp(weather);
+                days = getDays(weather);
+                imgs = getIcons(weather);
+                Log.d("DEBUGG", "Done" + "\n \n");
+
+                iCallBack.callback(temps, days, imgs);
+
             }
 
             @Override
@@ -58,13 +67,6 @@ public class WeatherFiveDays
 
     public ArrayList<String> getTemps() {
         return temps;
-    }
-
-    private void setArrays(ThreeHourForecast weather)
-    {
-        temps = getAverageTemp(weather);
-        days = getDays(weather);
-        imgs = getIcons(weather);
     }
 
     private ArrayList<Integer> getIcons(ThreeHourForecast weather)
@@ -110,15 +112,12 @@ public class WeatherFiveDays
                 }
                 else
                 {
-                    med=i-positions.get(k-1);
-                    med=med/2;
+                    med = i- positions.get(k-1);
+                    med = med/2;
                 }
                 main.add(weather.getList().get(med).getWeatherArray().get(0).getMain());
+                Log.d("DEBUGG", "\n" + main.get(k));
                 k++;
-            }
-            else
-            {
-
             }
 
         }
@@ -127,18 +126,39 @@ public class WeatherFiveDays
 
         for(int i=0; i<main.size(); i++)
         {
+            //Log.d("DEBUGG", "\n" + main.get(i));
             switch (main.get(i))
             {
-                case "Rain" : icons.add(R.drawable.rain_cloud);
-                break;
-                case "Clear": icons.add(R.drawable.sun);
-                break;
-                case "Clouds": icons.add(R.drawable.sun_clouds);
-                break;
-                case "Snow": icons.add(R.drawable.snow);
-                break;
-                case "Storm": icons.add(R.drawable.thunder_storm);
-                break;
+                case "Rain" :
+                    {
+                        icons.add(R.drawable.rain_cloud);
+                        break;
+                    }
+                case "Clear":
+                    {
+                        icons.add(R.drawable.sun);
+                        break;
+                    }
+                case "Clouds":
+                {
+                    icons.add(R.drawable.sun_clouds);
+                    break;
+                }
+                case "Snow":
+                {
+                    icons.add(R.drawable.snow);
+                    break;
+                }
+                case "Storm":
+                {
+                    icons.add(R.drawable.thunder_storm);
+                    break;
+                }
+                default:
+                {
+                    icons.add(R.drawable.cloud);
+                    break;
+                }
             }
         }
 
@@ -255,6 +275,7 @@ public class WeatherFiveDays
         //Log.d("DEBUGG", date.getTime()+"");
         return date;
     }
+
 
 
 }
