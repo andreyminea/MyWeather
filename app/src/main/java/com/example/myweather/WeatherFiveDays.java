@@ -14,8 +14,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.Map;
 
 public class WeatherFiveDays
 {
@@ -24,6 +22,7 @@ public class WeatherFiveDays
     private OpenWeatherMapHelper helper = new OpenWeatherMapHelper("edda4badb05cc4d5f46bc0152c1d13fc");
     private double longi, lat;
     private String city;
+    private String forecastToday;
     private ArrayList<String> days = new ArrayList<>();
     private ArrayList<Integer> imgs = new ArrayList<>();
     private ArrayList<String> temps = new ArrayList<>();
@@ -37,12 +36,13 @@ public class WeatherFiveDays
         helper.getThreeHourForecastByGeoCoordinates(lat, longi, new ThreeHourForecastCallback() {
             @Override
             public void onSuccess(ThreeHourForecast weather) {
-                Log.d("DEBUGG", "City/Country: " + weather.getCity().getName() + "/" + weather.getCity().getCountry() + "\n \n");
+                Log.d("DEBUGG", "City/Country: " + weather.getCity().getName() + "/" + weather.getList().get(4).getWeatherArray().get(0).getIcon() + "\n \n");
 
                 temps = getAverageTemp(weather);
                 days = getDays(weather);
                 imgs = getIcons(weather);
-                Log.d("DEBUGG", "Done" + "\n \n");
+
+                city = weather.getCity().getName();
 
                 iCallBack.callback(temps, days, imgs);
 
@@ -57,17 +57,8 @@ public class WeatherFiveDays
 
     }
 
-    public ArrayList<String> getDays() {
-        return days;
-    }
 
-    public ArrayList<Integer> getImgs() {
-        return imgs;
-    }
 
-    public ArrayList<String> getTemps() {
-        return temps;
-    }
 
     private ArrayList<Integer> getIcons(ThreeHourForecast weather)
     {
@@ -82,51 +73,44 @@ public class WeatherFiveDays
         }
 
         Date aux = arrayDate.get(0);
-        ArrayList<Integer> positions = new ArrayList<>();
+        ArrayList<String> main = new ArrayList<>();
+        ArrayList<String> forecastDay = new ArrayList<>();
 
         for(int i=1; i<n; i++)
         {
             if(aux.equals(arrayDate.get(i)))
             {
-                continue;
+                forecastDay.add(weather.getList().get(i).getWeatherArray().get(0).getMain());
             }
             else
             {
                 aux = arrayDate.get(i);
-                positions.add(i);
+
+                String forecast = forecastDay.get(forecastDay.size()/2);
+
+                main.add(forecast);
+
+                forecastDay.clear();
             }
         }
-        positions.add(n-1);
-
-        int k=0;
-        ArrayList<String> main = new ArrayList<>();
-
-        for(int i=0; i<n; i++)
+        if(aux.equals(arrayDate.get(n-1)))
         {
-            if(i==positions.get(k))
-            {
-                int med;
-                if(k==0)
-                {
-                    med = i/2;
-                }
-                else
-                {
-                    med = i- positions.get(k-1);
-                    med = med/2;
-                }
-                main.add(weather.getList().get(med).getWeatherArray().get(0).getMain());
-                Log.d("DEBUGG", "\n" + main.get(k));
-                k++;
-            }
-
+            String forecast = forecastDay.get(forecastDay.size()/2);
+            main.add(forecast);
         }
+
+
 
         ArrayList<Integer> icons = new ArrayList<>();
 
+        String debug = "\n";
+
+        forecastToday = main.get(0);
+
+
         for(int i=0; i<main.size(); i++)
         {
-            //Log.d("DEBUGG", "\n" + main.get(i));
+            debug = debug+main.get(i) +"\n";
             switch (main.get(i))
             {
                 case "Rain" :
@@ -162,6 +146,8 @@ public class WeatherFiveDays
             }
         }
 
+        Log.d("DEBUGG", debug);
+
         return icons;
 
     }
@@ -171,13 +157,21 @@ public class WeatherFiveDays
         int n = weather.getList().size();
 
         ArrayList<String> dayOfWeek = new ArrayList<>();
-            Date temp = getDateString(weather.getList().get(0).getDtTxt(), true);
-            Calendar calendar = GregorianCalendar.getInstance();
+            Date temp ;
+            Calendar calendar;
+            temp = getDateString(weather.getList().get(0).getDtTxt(), true);
+            calendar = GregorianCalendar.getInstance();
             calendar.setTime(temp);
-            int day = calendar.get(Calendar.DAY_OF_WEEK);
-            for(int i=0; i<5; i++)
+            int firstDay = calendar.get(Calendar.DAY_OF_WEEK);
+
+            temp = getDateString(weather.getList().get(39).getDtTxt(), true);
+            calendar = GregorianCalendar.getInstance();
+            calendar.setTime(temp);
+            int lastDay = calendar.get(Calendar.DAY_OF_WEEK);
+
+            while(firstDay<=lastDay)
             {
-                switch (day) {
+                switch (firstDay) {
                     case 2:
                         dayOfWeek.add("MONDAY");
                         break;
@@ -202,9 +196,9 @@ public class WeatherFiveDays
                     default:
                         break;
                 }
-                day++;
-                if(day==1)
-                    day=1;
+                firstDay++;
+                if(firstDay==8)
+                    firstDay=1;
 
             }
 
@@ -227,27 +221,29 @@ public class WeatherFiveDays
         Date aux = arrayDate.get(0);
         ArrayList<Integer> dayAverage = new ArrayList<>();
 
-        int sum=0;
-        int k=1;
+        int max=-100, min=100;
 
         for(int i=1; i<n; i++)
         {
             if(aux.equals(arrayDate.get(i)))
             {
-                sum = sum + (int)weather.getList().get(i).getMain().getTemp();
-                k++;
+                if(max<(int)weather.getList().get(i).getMain().getTemp())
+                    max = (int)weather.getList().get(i).getMain().getTemp();
+                if(min>(int)weather.getList().get(i).getMain().getTemp())
+                    min = (int)weather.getList().get(i).getMain().getTemp();
             }
             else
             {
                 aux = arrayDate.get(i);
-                sum = sum / k;
-                dayAverage.add(sum);
-                sum = (int)weather.getList().get(i).getMain().getTemp();
-                k=1;
+                //Log.d("DEBUGG", max + " " + min);
+
+                dayAverage.add(max);
+                max=-100;
+                min=100;
             }
         }
-        sum = sum / k;
-        dayAverage.add(sum);
+        if(aux.equals(arrayDate.get(n-1)))
+            dayAverage.add(max);
 
         ArrayList<String> result = new ArrayList<>();
 
@@ -276,6 +272,26 @@ public class WeatherFiveDays
         return date;
     }
 
+
+    public ArrayList<String> getDays() {
+        return days;
+    }
+
+    public ArrayList<Integer> getImgs() {
+        return imgs;
+    }
+
+    public ArrayList<String> getTemps() {
+        return temps;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public String getForecastToday() {
+        return forecastToday;
+    }
 
 
 }

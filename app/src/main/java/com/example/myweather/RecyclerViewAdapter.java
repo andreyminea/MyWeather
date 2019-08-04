@@ -16,7 +16,6 @@ import java.util.ArrayList;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>
 {
-    final String TAG = "RecyclerViewAdapter";
     private ArrayList<String> days = new ArrayList<>();
     private ArrayList<Integer> imgs = new ArrayList<>();
     private ArrayList<String> temps = new ArrayList<>();
@@ -41,8 +40,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         holder.day.setText((days.get(position)));
         holder.image.setImageResource(imgs.get(position));
-        Log.d("DEBUGG",""+imgs.get(position));
         holder.temp.setText(temps.get(position));
+
+        String debug = days.get(position)+" "+temps.get(position)+" "+imgs.get(position);
+        String TAG="DEBUGG";
+        Log.d(TAG, debug);
 
         holder.image.setOnClickListener(new View.OnClickListener() {
             @Override

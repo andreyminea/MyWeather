@@ -10,10 +10,15 @@ import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.kwabenaberko.openweathermaplib.models.threehourforecast.ThreeHourForecast;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 import mumayank.com.airlocationlibrary.AirLocation;
 
@@ -25,6 +30,16 @@ public class MainActivity extends AppCompatActivity implements ICallBack {
     private ArrayList<String> days = new ArrayList<>();
     private ArrayList<Integer> imgs = new ArrayList<>();
     private ArrayList<String> temps = new ArrayList<>();
+
+    RelativeLayout background;
+
+    WeatherFiveDays mWeather;
+
+    ImageView todayIcon;
+    TextView todayTemp;
+    TextView todayForecast;
+    TextView currentCity;
+
     LinearLayoutManager layoutManager;
     RecyclerViewAdapter adapter;
 
@@ -33,6 +48,13 @@ public class MainActivity extends AppCompatActivity implements ICallBack {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        todayIcon = findViewById(R.id.weatherArt);
+        todayTemp = findViewById(R.id.cityTemp);
+        currentCity = findViewById(R.id.cityShow);
+        todayForecast = findViewById(R.id.cityCondition);
+        background = findViewById(R.id.background);
+
 
         perday = findViewById(R.id.prognosysDays);
         layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL,false);
@@ -65,25 +87,36 @@ public class MainActivity extends AppCompatActivity implements ICallBack {
 
     private void locationGot()
     {
-        WeatherFiveDays mWeather = new WeatherFiveDays(lat,longi, this);
-
-
-
+        mWeather = new WeatherFiveDays(lat,longi, this);
         days = mWeather.getDays();
         imgs = mWeather.getImgs();
         temps = mWeather.getTemps();
-
-        Log.d("DEBUGG", "List size: " + mWeather.getDays().size());
-
-        Log.d("DEBUGG", "Location Done ....updating screen");
-
-
     }
 
     private void updateScreen()
     {
         initRecycleView();
+        todayIcon.setImageResource(imgs.get(0));
+        todayTemp.setText(temps.get(0)+"°C");
+        todayForecast.setText(mWeather.getForecastToday());
+        currentCity.setText(mWeather.getCity());
+        setDayNight();
 
+    }
+
+    private void setDayNight()
+    {
+        Date currentTime = Calendar.getInstance().getTime();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(currentTime);
+        Log.d("DEBUGG", calendar.get(Calendar.HOUR)+ "ORAAAAAAAAAAAAAA" +
+                "");
+        if(calendar.get(Calendar.HOUR)>7 && calendar.get(Calendar.HOUR)<20)
+        {
+            background.setBackgroundResource(R.drawable.sky_day);
+        }
+        else
+            background.setBackgroundResource(R.drawable.nisght_sky);
 
     }
 
@@ -105,12 +138,9 @@ public class MainActivity extends AppCompatActivity implements ICallBack {
 
     void initRecycleView()
     {
-        Log.d("DEBUGG", "RecycleView is set");
 
         adapter = new RecyclerViewAdapter(days, imgs, temps, this);
         perday.setAdapter(adapter);
-
-        Log.d("DEBUGG", "RecycleView size: " + adapter.getItemCount());
 
     }
 
@@ -124,4 +154,5 @@ public class MainActivity extends AppCompatActivity implements ICallBack {
         updateScreen();
 
     }
+
 }

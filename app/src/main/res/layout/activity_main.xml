@@ -4,20 +4,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFF"
+    android:id="@+id/background"
+    android:background="@drawable/nisght_sky"
     tools:context=".MainActivity">
 
-    <SearchView
-        android:id="@+id/searchBar"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"></SearchView>
+
 
     <RelativeLayout
         android:id="@+id/todayWeather"
-        android:layout_below="@+id/searchBar"
-        android:background="@drawable/nisght_sky"
         android:layout_width="match_parent"
-        android:layout_height="300dp">
+        android:layout_height="400dp">
+
+        <SearchView
+            android:id="@+id/searchBar"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:translationZ="30dp"
+            android:outlineSpotShadowColor="@color/colorWhite"
+            android:outlineAmbientShadowColor="@color/colorWhite"
+            android:background="#1EFFFFFF"
+            android:layout_height="50dp"></SearchView>
 
         <ImageView
             android:id="@+id/weatherArt"
@@ -34,8 +40,7 @@
             android:layout_height="wrap_content"
             android:text="Cloudy"
             android:textSize="25sp"
-            android:textColor="#FFF"
-            android:elevation="10dp"/>
+            android:textColor="#FFF" />
 
         <TextView
             android:id="@+id/cityShow"
@@ -58,23 +63,12 @@
             android:textColor="#FFF"/>
     </RelativeLayout>
 
-    <TextView
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="10dp"
-        android:id="@+id/separator"
-        android:layout_below="@+id/todayWeather"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="Next 5 days"
-        android:textSize="20sp" />
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/prognosysDays"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="50dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/separator"
+        android:layout_below="@+id/todayWeather"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="0dp" />
 
