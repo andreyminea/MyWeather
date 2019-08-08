@@ -1,7 +1,6 @@
 package com.example.myweather;
 
 import android.util.Log;
-import android.widget.Toast;
 
 import com.kwabenaberko.openweathermaplib.constants.Units;
 import com.kwabenaberko.openweathermaplib.implementation.OpenWeatherMapHelper;
@@ -17,7 +16,7 @@ import java.util.GregorianCalendar;
 
 public class WeatherFiveDays
 {
-    ICallBack iCallBack;
+    IMainCallBack iMainCallBack;
 
     private OpenWeatherMapHelper helper = new OpenWeatherMapHelper("edda4badb05cc4d5f46bc0152c1d13fc");
     private double longi, lat;
@@ -27,9 +26,9 @@ public class WeatherFiveDays
     private ArrayList<Integer> imgs = new ArrayList<>();
     private ArrayList<String> temps = new ArrayList<>();
 
-    public WeatherFiveDays(double latitude, double longitude, ICallBack ic)
+    public WeatherFiveDays(double latitude, double longitude, IMainCallBack ic)
     {
-        iCallBack=ic;
+        iMainCallBack =ic;
         longi=longitude;
         lat=latitude;
         helper.setUnits(Units.METRIC);
@@ -44,7 +43,7 @@ public class WeatherFiveDays
 
                 city = weather.getCity().getName();
 
-                iCallBack.callback(temps, days, imgs);
+                iMainCallBack.callback(temps, days, imgs);
 
             }
 
@@ -57,7 +56,19 @@ public class WeatherFiveDays
 
     }
 
+    private void bebug(ThreeHourForecast weather)
+    {
+        int n = weather.getList().size();
 
+        String debug = "TEMPERATURE \n";
+        for(int i=0; i<n; i++)
+        {
+            debug = debug + weather.getList().get(i).getDtTxt() + "\n";
+        }
+
+        //Log.d("DEBUGG", debug);
+
+    }
 
 
     private ArrayList<Integer> getIcons(ThreeHourForecast weather)
@@ -76,7 +87,7 @@ public class WeatherFiveDays
         ArrayList<String> main = new ArrayList<>();
         ArrayList<String> forecastDay = new ArrayList<>();
 
-        for(int i=1; i<n; i++)
+        for(int i=0; i<n; i++)
         {
             if(aux.equals(arrayDate.get(i)))
             {
@@ -91,6 +102,8 @@ public class WeatherFiveDays
                 main.add(forecast);
 
                 forecastDay.clear();
+
+                forecastDay.add(weather.getList().get(i).getWeatherArray().get(0).getMain());
             }
         }
         if(aux.equals(arrayDate.get(n-1)))
@@ -146,7 +159,7 @@ public class WeatherFiveDays
             }
         }
 
-        Log.d("DEBUGG", debug);
+        //Log.d("DEBUGG", debug);
 
         return icons;
 
@@ -164,12 +177,14 @@ public class WeatherFiveDays
             calendar.setTime(temp);
             int firstDay = calendar.get(Calendar.DAY_OF_WEEK);
 
-            temp = getDateString(weather.getList().get(39).getDtTxt(), true);
+            temp = getDateString(weather.getList().get(n-1).getDtTxt(), true);
             calendar = GregorianCalendar.getInstance();
             calendar.setTime(temp);
             int lastDay = calendar.get(Calendar.DAY_OF_WEEK);
 
-            while(firstDay<=lastDay)
+            //Log.d("DEBUGG", "" + lastDay);
+
+            while(true)
             {
                 switch (firstDay) {
                     case 2:
@@ -200,6 +215,9 @@ public class WeatherFiveDays
                 if(firstDay==8)
                     firstDay=1;
 
+                if(firstDay-1==lastDay)
+                    break;
+
             }
 
 
@@ -223,7 +241,7 @@ public class WeatherFiveDays
 
         int max=-100, min=100;
 
-        for(int i=1; i<n; i++)
+        for(int i=0; i<n; i++)
         {
             if(aux.equals(arrayDate.get(i)))
             {

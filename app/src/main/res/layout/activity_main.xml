@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/background"
-    android:background="@drawable/nisght_sky"
+    android:background="@drawable/day"
     tools:context=".MainActivity">
 
 
@@ -19,9 +19,6 @@
             android:id="@+id/searchBar"
             android:gravity="center"
             android:layout_width="match_parent"
-            android:translationZ="30dp"
-            android:outlineSpotShadowColor="@color/colorWhite"
-            android:outlineAmbientShadowColor="@color/colorWhite"
             android:background="#1EFFFFFF"
             android:layout_height="50dp"></SearchView>
 
