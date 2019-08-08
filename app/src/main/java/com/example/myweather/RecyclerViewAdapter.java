@@ -20,12 +20,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private ArrayList<Integer> imgs = new ArrayList<>();
     private ArrayList<String> temps = new ArrayList<>();
     private Context context;
+    OpenDayCallback openDayCallBack;
 
-    public RecyclerViewAdapter(ArrayList<String> days, ArrayList<Integer> imgs, ArrayList<String> temps, Context context) {
+    public RecyclerViewAdapter(ArrayList<String> days, ArrayList<Integer> imgs, ArrayList<String> temps, Context context, OpenDayCallback callback) {
         this.days = days;
         this.imgs = imgs;
         this.temps = temps;
         this.context = context;
+        this.openDayCallBack = callback;
     }
 
     @NonNull
@@ -50,6 +52,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             @Override
             public void onClick(View v) {
                 Toast.makeText(context, "You pressed on : "+days.get(position), Toast.LENGTH_SHORT).show();
+                openDayCallBack.open(position);
             }
         });
     }

@@ -92,6 +92,77 @@
         android:textColor="#FFF"
         android:textSize="30sp" />
 
+    <TextView
+        android:id="@+id/textHumidity"
+        android:layout_below="@+id/display"
+        android:layout_marginTop="80dp"
+        android:layout_marginLeft="40dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Humidity"
+        android:textColor="#FFF"
+        android:textSize="20sp"/>
+
+    <TextView
+        android:id="@+id/Humidity"
+        android:layout_toEndOf="@+id/textHumidity"
+        android:layout_below="@+id/display"
+        android:layout_marginTop="80dp"
+        android:layout_marginLeft="70dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="50"
+        android:textColor="#FFF"
+        android:textSize="20sp"/>
+
+    <TextView
+        android:id="@+id/textPressure"
+        android:layout_below="@+id/textHumidity"
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="40dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Pressure"
+        android:textColor="#FFF"
+        android:textSize="20sp"/>
+
+    <TextView
+        android:id="@+id/Pressure"
+        android:layout_toEndOf="@+id/textPressure"
+        android:layout_below="@+id/textHumidity"
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="70dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="5"
+        android:textColor="#FFF"
+        android:textSize="20sp"/>
+
+    <TextView
+        android:id="@+id/textWind"
+        android:layout_below="@+id/textPressure"
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="40dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Wind"
+        android:textColor="#FFF"
+        android:textSize="20sp"/>
+
+    <TextView
+        android:id="@+id/Wind"
+        android:layout_toEndOf="@+id/textWind"
+        android:layout_below="@+id/textPressure"
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="110dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="300"
+        android:textColor="#FFF"
+        android:textSize="20sp"/>
+
+
+
 
 
 

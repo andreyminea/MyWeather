@@ -22,7 +22,7 @@ import java.util.Date;
 
 import mumayank.com.airlocationlibrary.AirLocation;
 
-public class MainActivity extends AppCompatActivity implements IMainCallBack {
+public class MainActivity extends AppCompatActivity implements IMainCallBack, OpenDayCallback {
 
     private AirLocation airLocation;
     private double longi, lat;
@@ -61,18 +61,16 @@ public class MainActivity extends AppCompatActivity implements IMainCallBack {
         perday = findViewById(R.id.prognosysDays);
         layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL,false);
         perday.setLayoutManager(layoutManager);
-        adapter = new RecyclerViewAdapter(days, imgs, temps, this);
+        adapter = new RecyclerViewAdapter(days, imgs, temps, this, this);
         perday.setAdapter(adapter);
-
-        String city = searchBar.getQuery().toString();
-        Toast.makeText(MainActivity.this, city, Toast.LENGTH_SHORT).show();
 
         searchBar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 String city = searchBar.getQuery().toString();
-                Toast.makeText(MainActivity.this, city, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(MainActivity.this, city, Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(MainActivity.this, SearchCityActivity.class);
+                intent.putExtra("String_City", city);
                 startActivity(intent);
                 return true;
             }
@@ -136,7 +134,7 @@ public class MainActivity extends AppCompatActivity implements IMainCallBack {
         int hour = calendar.get(Calendar.HOUR);
         if(calendar.get(Calendar.PM)==1)
             hour = hour+12;
-        if(hour>7 && hour<20)
+        if(hour>=9 && hour<20)
         {
             background.setBackgroundResource(R.drawable.day);
         }
@@ -165,7 +163,7 @@ public class MainActivity extends AppCompatActivity implements IMainCallBack {
     void initRecycleView()
     {
 
-        adapter = new RecyclerViewAdapter(days, imgs, temps, this);
+        adapter = new RecyclerViewAdapter(days, imgs, temps, this, this);
         perday.setAdapter(adapter);
 
     }
@@ -181,4 +179,14 @@ public class MainActivity extends AppCompatActivity implements IMainCallBack {
 
     }
 
+    @Override
+    public void open(int day)
+    {
+        Intent intent = new Intent(MainActivity.this, DayActivity.class);
+        intent.putExtra("longitude",longi);
+        intent.putExtra("latitude", lat);
+        intent.putExtra("position", day);
+        intent.putExtra("day", days.get(day));
+        startActivity(intent);
+    }
 }

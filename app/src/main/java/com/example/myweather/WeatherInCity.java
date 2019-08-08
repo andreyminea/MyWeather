@@ -9,12 +9,22 @@ import com.kwabenaberko.openweathermaplib.models.currentweather.CurrentWeather;
 
 public class WeatherInCity
 {
-    ISearchCallBack iSearchCallBack;
+    private double Humidity;
+    private double Pressure;
+    private int Temp;
+    private double Wind;
+    private int Icon;
+    private int TempMin;
+    private int TempMax;
+    private String Main;
+    private ISearchCallBack iSearchCallBack;
+
     private OpenWeatherMapHelper helper = new OpenWeatherMapHelper("edda4badb05cc4d5f46bc0152c1d13fc");
 
     public WeatherInCity(String city, ISearchCallBack ic)
     {
         this.iSearchCallBack = ic;
+
         helper.setUnits(Units.METRIC);
         helper.getCurrentWeatherByCityName(city, new CurrentWeatherCallback() {
             @Override
@@ -26,14 +36,17 @@ public class WeatherInCity
                         +"City, Country: " + currentWeather.getName() + ", " + currentWeather.getSys().getCountry()
                 );
 
-                debug(currentWeather);
-                iSearchCallBack.callback();
+                //debug(currentWeather);
+                setEverything(currentWeather);
+                iSearchCallBack.callback(currentWeather.getName().toString());
 
             }
 
             @Override
             public void onFailure(Throwable throwable) {
+
                 Log.d("DEBUGG", "ERROR !!!!!!!!!!!!!");
+                iSearchCallBack.exists();
             }
 
 
@@ -41,9 +54,92 @@ public class WeatherInCity
         });
     }
 
+    private void setEverything(CurrentWeather currentWeather)
+    {
+        Humidity = currentWeather.getMain().getHumidity();
+        Pressure = currentWeather.getMain().getPressure();
+        Temp = (int)currentWeather.getMain().getTemp();
+        Wind = currentWeather.getWind().getSpeed();
+        Main = currentWeather.getWeather().get(0).getMain();
+        TempMax = (int)currentWeather.getMain().getTempMax();
+        TempMin = (int)currentWeather.getMain().getTempMin();
+
+        String main = currentWeather.getWeather().get(0).getMain();
+        switch (main)
+        {
+            case "Rain" :
+            {
+                Icon = R.drawable.rain_cloud;
+                break;
+            }
+            case "Clear":
+            {
+                Icon = R.drawable.sun;
+                break;
+            }
+            case "Clouds":
+            {
+                Icon = R.drawable.sun_clouds;
+                break;
+            }
+            case "Snow":
+            {
+                Icon = R.drawable.snow;
+                break;
+            }
+            case "Storm":
+            {
+                Icon = R.drawable.thunder_storm;
+                break;
+            }
+            default:
+            {
+                Icon = R.drawable.cloud;
+                break;
+            }
+        }
+
+    }
+
     private void debug(CurrentWeather currentWeather)
     {
-        Log.d("DEBUGG", currentWeather.getMain().toString());
+        Log.d("DEBUGG", currentWeather.getWeather().get(0).getMain());
+    }
+
+    public double getHumidity() {
+        return Humidity;
+    }
+
+    public double getPressure() {
+        return Pressure;
+    }
+
+    public int getTemp() {
+        return Temp;
+    }
+
+    public double getWind() {
+        return Wind;
+    }
+
+    public int getIcon() {
+        return Icon;
+    }
+
+    public int getTempMin() {
+        return TempMin;
+    }
+
+    public int getTempMax() {
+        return TempMax;
+    }
+
+    public String getMain() {
+        return Main;
+    }
+
+    public OpenWeatherMapHelper getHelper() {
+        return helper;
     }
 
 }

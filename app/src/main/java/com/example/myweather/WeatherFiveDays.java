@@ -239,7 +239,7 @@ public class WeatherFiveDays
         Date aux = arrayDate.get(0);
         ArrayList<Integer> dayAverage = new ArrayList<>();
 
-        int max=-100, min=100;
+        int max=-100;
 
         for(int i=0; i<n; i++)
         {
@@ -247,8 +247,6 @@ public class WeatherFiveDays
             {
                 if(max<(int)weather.getList().get(i).getMain().getTemp())
                     max = (int)weather.getList().get(i).getMain().getTemp();
-                if(min>(int)weather.getList().get(i).getMain().getTemp())
-                    min = (int)weather.getList().get(i).getMain().getTemp();
             }
             else
             {
@@ -257,11 +255,13 @@ public class WeatherFiveDays
 
                 dayAverage.add(max);
                 max=-100;
-                min=100;
             }
         }
         if(aux.equals(arrayDate.get(n-1)))
+        {
+            max = (int)weather.getList().get(n-1).getMain().getTemp();
             dayAverage.add(max);
+        }
 
         ArrayList<String> result = new ArrayList<>();
 
