@@ -134,7 +134,7 @@ public class MainActivity extends AppCompatActivity implements IMainCallBack, Op
         int hour = calendar.get(Calendar.HOUR);
         if(calendar.get(Calendar.PM)==1)
             hour = hour+12;
-        if(hour>=9 && hour<20)
+        if(hour>6 && hour<20)
         {
             background.setBackgroundResource(R.drawable.day);
         }
