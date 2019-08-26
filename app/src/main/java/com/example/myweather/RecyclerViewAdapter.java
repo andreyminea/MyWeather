@@ -47,6 +47,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         String debug = days.get(position)+" "+temps.get(position)+" "+imgs.get(position);
         String TAG="DEBUGG";
         Log.d(TAG, debug);
+        /*
+            Aici a fost setat un Listener, adica de fiecare data cand o cineva da click pe iconita se va trimite prin intermediul
+            callbackului positia, si asa ne putem da seama pe ce zi a apasat
+         */
 
         holder.image.setOnClickListener(new View.OnClickListener() {
             @Override

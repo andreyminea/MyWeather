@@ -9,6 +9,10 @@ import com.kwabenaberko.openweathermaplib.models.currentweather.CurrentWeather;
 
 public class WeatherInCity
 {
+    /*
+        Aici ni s-au returnat date cu privire la singura zi, am folosit o medtoda oferita de Api diferita fata de celelalte
+        clase care comunica cu serverul, si anume cea care ne intorce date meteo corespunzatoare u nui oras
+     */
     private double Humidity;
     private double Pressure;
     private int Temp;
@@ -56,6 +60,11 @@ public class WeatherInCity
 
     private void setEverything(CurrentWeather currentWeather)
     {
+        /*
+            Aici pur si simplu s-au luat date din elementul returnat de api si s-au pus in variabilele declarate in clasa
+
+            ca apoi cu cu metode de get sa se poata apela in activitatea ce are nevoie de aceste date( search city activ)
+         */
         Humidity = currentWeather.getMain().getHumidity();
         Pressure = currentWeather.getMain().getPressure();
         Temp = (int)currentWeather.getMain().getTemp();

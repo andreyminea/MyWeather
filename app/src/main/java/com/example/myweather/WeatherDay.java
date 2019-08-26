@@ -50,6 +50,10 @@ public class WeatherDay
 
     private void setEverything(ThreeHourForecast weather, int position)
     {
+        /*
+            In cazul asta ne-a trebuit array ul cu dates, dar sa contina si orele
+            Am stabilit unde se termina ziua si am pus temperaturile in lista de temp
+         */
         int n = weather.getList().size();
 
         ArrayList<Date> arrayDate = new ArrayList<>();
@@ -77,6 +81,9 @@ public class WeatherDay
             }
         }
         int begin = i;
+        /*
+            Aici s-a pus prognoza si in functie de prognoza s-a ales si o imagine sugestiva
+         */
 
             for (i = begin; i < n; i++) {
                 if (aux.equals(arrayDate.get(i)))
