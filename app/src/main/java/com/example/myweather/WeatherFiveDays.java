@@ -220,10 +220,11 @@ public class WeatherFiveDays
             calendar.setTime(temp);
             int lastDay = calendar.get(Calendar.DAY_OF_WEEK);
 
-            //Log.d("DEBUGG", "" + lastDay);
+            Log.d("DEBUGG", lastDay + " + " + firstDay);
 
             while(true)
             {
+
                 switch (firstDay) {
                     case 2:
                         dayOfWeek.add("MONDAY");
@@ -249,12 +250,12 @@ public class WeatherFiveDays
                     default:
                         break;
                 }
+                if((firstDay)==lastDay)
+                    break;
+
                 firstDay++;
                 if(firstDay==8)
                     firstDay=1;
-
-                if(firstDay-1==lastDay)
-                    break;
 
             }
 
